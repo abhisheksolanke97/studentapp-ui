@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage("checkout"){
             steps{
-                git 'https://github.com/mayurpandit25/studentapp-ui.git'
+                git 'https://github.com/abhisheksolanke97/studentapp-ui.git'
                 echo "Clonning is successful"
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Artifacts to s3'){
             steps{
                 sh '''
-                  aws s3 cp target/*.war s3://mayurcbz.spacee/Arfifacts/student.war
+                  aws s3 cp target/*.war s3://abhishek54321.space/Arfifacts/student.war
                 '''
             }
         }
@@ -76,7 +76,7 @@ pipeline {
         stage('Deployment on k8s'){
             steps{
                 sh '''
-                    aws eks update-kubeconfig --name my-cluster-mayur --region us-east-2
+                    aws eks update-kubeconfig --name my-cluster-abhi --region ap-south-1
                     kubectl apply -f k8s/
                     kubectl get pods
                     sleep 20
