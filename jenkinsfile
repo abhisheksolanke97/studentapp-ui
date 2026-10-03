@@ -65,17 +65,13 @@ pipeline {
         }
 
         stage('Push image to ECR') {
-            steps {
-                steps{
-                    sh '''
-                        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com
-                        docker tag studentapp:latest 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
-                        docker push 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
-                    '''
-                }
+            steps{
+                sh '''
+                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com
+                    docker tag studentapp:latest 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
+                    docker push 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
+                '''
             }
-
-            
         }
         
     }
