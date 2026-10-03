@@ -11,7 +11,7 @@ pipeline {
         my_aws_cred = credentials('aws-cred')
     }
 
-    stage {
+    stages {
         stage("checkout") {
             steps{
                 git 'https://github.com/abhisheksolanke97/studentapp-ui.git'
