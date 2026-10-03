@@ -1,39 +1,43 @@
 pipeline {
-    agent {
+    agent{
         label "worker"
     }
 
-    tools{
-        terraform 'tf'
+    tools {
+        maven "maven"
     }
 
     environment{
-        MY_AWS_CRED = credentials('aws-cred')
+        my_aws_cred = creadentials('aws-cred')
     }
 
-    stages{
-        stage('Checkout'){
+    stages {
+        stage("chechout"){
             steps{
-                git 'https://github.com/mayurpandit25/studentapp-ui.git'
+                git "https://github.com/abhisheksolanke97/studentapp-ui.git"
+                echo "Clonning is successful"
             }
         }
 
-        stage('Terraform - Init'){
+        stage("Build"){
             steps{
-                sh 'terraform init'
+                sh 'mvn clean package'
+            }
+            post{
+                success {
+                    archiveArtifacts artifacts: '**/target/*.war',fingerprint: true 
+                }
             }
         }
 
-        stage('Terraform - validate'){
+        stage('Artifacts to s3'){
             steps{
-                sh 'terraform validate'
+                sh '''
+                    aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student_ui.war
+                '''
             }
         }
 
-        stage('Terraform - apply'){
-            steps{
-                sh 'terraform apply --auto-approve'
-            }
-        }
+        stage('')
     }
 }
