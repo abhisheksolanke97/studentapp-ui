@@ -29,5 +29,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Artifacts to s3') {
+            steps {
+                sh '''
+                    aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student..war
+                    
+                '''
+            }
+        }
     }
 }
