@@ -8,41 +8,40 @@ pipeline {
     }
 
     environment {
-        my_aws_cred = credentials('aws-cred')
+        my_aws_cred = credentials("aws-cred")
     }
 
     stages {
-        stage("checkout") {
-            steps{
-                git 'https://github.com/abhisheksolanke97/studentapp-ui.git'
-                echo 'Clonning is Successful'
+        stage ('checkout') {
+            steps {
+                git "https://github.com/abhisheksolanke97/studentapp-ui.git"
+                echo "Clonning is Successful"
             }
         }
 
-        stage("Build"){
-            steps{
+        stage ('Build') {
+            steps {
                 sh 'mvn clean package'
             }
-            post{
-                success{
-                    archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/target/*.jar',fingerprint: true 
                 }
             }
         }
 
-        stage('Artifacts to s3') {
-            steps {
+        stage ('Artifacts to s3') {
+            steps{
                 sh '''
                     aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student.war
-
                 '''
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage ('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonar') {
-                    sh 'mvn sonar:sonar'
+                withSonarQubeEnv('soanr') {
+                    sh 'mvn sonar:soanr'
                 }
             }
         }
@@ -55,36 +54,6 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                sh '''
-                    docker build -t studentapp .
-                    docker images
-                '''
-            }
-        }
-
-        stage('Push image to ECR') {
-            steps{
-                sh '''
-                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com
-                    docker tag studentapp:latest 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
-                    docker push 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp:latest
-                '''
-            }
-        }
         
-        stage('Deployment on k8s') {
-            steps{
-                sh '''
-                    aws eks update-kubeconfig --name eks-cluster-abhi --region ap-south-1
-                    kubectl apply -f k8s/
-                    kubectl get pods
-                    sleep 20
-                    kubectl get pods 
-                    kubectl get svc -o wide
-                '''
-            }
-        }
     }
 }
