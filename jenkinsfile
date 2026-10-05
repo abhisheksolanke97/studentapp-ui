@@ -78,6 +78,8 @@ pipeline {
                 sh '''
                     aws eks update-kubeconfing --name eks-cluster-abhi --region ap-south-1
                     kuberctl apply -f k8s/
+                    kubectl rollout restart deployment/student-deployment
+                    kubectl rollout status deployment/student-deployment --timeout=180s
                     kubectl get pods
                     sleep 20 
                     kubectl get pods
