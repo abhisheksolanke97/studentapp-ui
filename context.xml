@@ -30,7 +30,7 @@
           password="admin123"
           driverClassName="com.mysql.jdbc.Driver"
           url="jdbc:mysql://database-1.cfkyaw8aed88.ap-south-1.rds.amazonaws.com:3306/school"/>
-
+ 
 <!--  Uncomment this to disable session persistence across Tomcat restarts  -->
 <!-- 
     <Manager pathname="" />
