@@ -8,30 +8,30 @@ pipeline {
     }
 
     environment {
-        my_aws_cred = credentials('aws-cred')
+        my_aws_cred = credentials("aws-cred")
     }
 
     stages {
-        stage("Checkout") {
-            steps{
+        stage('Checkout') {
+            steps {
                 git "https://github.com/abhisheksolanke97/studentapp-ui.git"
-                echo "Clonning is Successful"
             }
         }
+    
 
-        stage('Terraform - init') {
+        stage('Terraform init') {
             steps {
                 sh 'terraform init'
             }
         }
 
-        stage('Terraform - validate') {
+        stage('Terraform validate') {
             steps {
                 sh 'terraform validate'
             }
         }
 
-        stage('Terraform - apply') {
+        stage('Terraform apply') {
             steps {
                 sh 'terraform apply --auto-approve'
             }
